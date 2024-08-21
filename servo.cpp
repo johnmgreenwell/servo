@@ -13,8 +13,9 @@
 namespace PeripheralIO 
 {
 
-const uint32_t SERVO_FREQUENCY_HZ  = 50u;
+const uint32_t SERVO_FREQUENCY_HZ = 50u;
 const uint8_t  SERVO_MAX_ANGLE    = 180u;
+const uint8_t  SERVO_MIN_ANGLE    = 0;
 const uint32_t SERVO_MAX_US       = 2000u;
 const uint32_t SERVO_MIN_US       = 1000u;
 const uint32_t SERVO_BASE_US      = SERVO_MAX_US - SERVO_MIN_US;
@@ -37,7 +38,9 @@ void Servo::write(uint8_t angle)
 
     duty = SERVO_BASE_PERCENT + (((float)angle/(float)SERVO_MAX_ANGLE) * SERVO_BASE_PERCENT);
     _pwm.set(SERVO_FREQUENCY_HZ, duty);
+
     _angle = angle;
+    _us    = SERVO_BASE_US + (uint32_t)((float)SERVO_BASE_US * (duty / 100.0f));
 }
 
 uint8_t Servo::read() const
@@ -60,7 +63,9 @@ void Servo::writeMicroseconds(uint32_t us)
 
     duty = SERVO_BASE_PERCENT + ((((float)(us - SERVO_MIN_US)/(float)(SERVO_BASE_US))) * SERVO_BASE_PERCENT);
     _pwm.set(SERVO_FREQUENCY_HZ, duty);
-    _us = us;
+
+    _us    = us;
+    _angle = (((uint32_t)us * (uint32_t)SERVO_MAX_ANGLE) / SERVO_BASE_US) + SERVO_BASE_US;
 }
 
 uint32_t Servo::readMicroseconds() const
