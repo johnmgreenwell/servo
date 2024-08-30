@@ -10,8 +10,9 @@ This HAL-mediated custom servo driver permits ease of use that is designed to be
 
 The implementation relies on an external user-defined hardware abstraction layer (HAL) called `hal.h` which defines the necessary calls in the `HAL` namespace. Namely, a PWM object which sets a PWM waveform on a particular pin at a particular frequency in Hz and duty cycle integer.
 
-The HAL PWM object takes an identifying pin integer at initialization and has a PWM method taking the following format:
-* void set(uint32_t freq, float duty)
+The HAL PWM object takes an identifying pin integer at initialization and has a PWM method according to the following:
+* HAL::PWM pwm(pin_number)
+* void PWM::set(uint32_t frequency, float duty)
 
 ### Example
 
